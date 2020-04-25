@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './login_page.dart';
+import './login_screen.dart';
 import '../services/sign_in.dart';
 
 class MainScreen extends StatelessWidget {
@@ -60,7 +60,7 @@ class MainScreen extends StatelessWidget {
               RaisedButton(
                 onPressed: () {
                   signOutGoogle();
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) {return LoginPage();}), ModalRoute.withName('/'));
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) {return LoginScreen();}), ModalRoute.withName('/'));
                 },
                 color: Colors.deepPurple,
                 child: Padding(

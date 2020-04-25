@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
+FirebaseUser currentUser;
 String name;
 String email;
 String imageUrl;
@@ -13,11 +17,49 @@ Future<String> signInWithGoogle() async {
   final GoogleSignInAuthentication googleSignInAuthentication =
       await googleSignInAccount.authentication;
 
+  await saveUserCardentials(googleSignInAuthentication);
+  
   final AuthCredential credential = GoogleAuthProvider.getCredential(
     accessToken: googleSignInAuthentication.accessToken,
     idToken: googleSignInAuthentication.idToken,
   );
+  return login(credential);
+}
 
+void signOutGoogle() async {
+  await googleSignIn.signOut();
+
+  print("User Sign Out");
+}
+
+Future<void> saveUserCardentials(
+    GoogleSignInAuthentication googleSignInAuthentication) async {
+  final prefs = await SharedPreferences.getInstance();
+  final userCardentials = json.encode(
+    {
+      'accessToken': googleSignInAuthentication.accessToken,
+      'idToken': googleSignInAuthentication.idToken,
+    },
+  );
+  prefs.setString('userCardentials', userCardentials);
+}
+
+Future<AuthCredential> getUserCardentials() async {
+  final prefs = await SharedPreferences.getInstance();
+  if (!prefs.containsKey('userCardentials')) {
+    return null;
+  } else {
+    final extractedUserData =
+        json.decode(prefs.getString('userCardentials')) as Map<String, Object>;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: extractedUserData['accessToken'],
+      idToken: extractedUserData['userId'],
+    );
+    return credential;
+  }
+}
+
+Future<String> login(AuthCredential credential) async {
   final AuthResult authResult = await _auth.signInWithCredential(credential);
   final FirebaseUser user = authResult.user;
 
@@ -38,14 +80,8 @@ Future<String> signInWithGoogle() async {
   assert(!user.isAnonymous);
   assert(await user.getIdToken() != null);
 
-  final FirebaseUser currentUser = await _auth.currentUser();
+  currentUser = await _auth.currentUser();
+
   assert(user.uid == currentUser.uid);
-
   return 'signInWithGoogle succeeded: $user';
-}
-
-void signOutGoogle() async {
-  await googleSignIn.signOut();
-
-  print("User Sign Out");
 }

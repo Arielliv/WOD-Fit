@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:wod_fit/screens/main_screen.dart';
-import 'package:wod_fit/services/sign_in.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth.dart';
 
 class SingInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlineButton(
       splashColor: Colors.grey,
-      onPressed: () {
-         signInWithGoogle().whenComplete(() {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return MainScreen();
-              },
-            ),
-          );
-        });
+      onPressed: () async {
+        await Provider.of<Auth>(context, listen: false).signInWithGoogle();
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
