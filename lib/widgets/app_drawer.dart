@@ -6,10 +6,22 @@ import '../providers/auth.dart';
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final userImageUrl = Provider.of<Auth>(context, listen: false).imageUrl;
+
     return Drawer(
       child: Column(
         children: <Widget>[
           AppBar(
+            leading: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  userImageUrl,
+                ),
+                radius: 10,
+                backgroundColor: Colors.transparent,
+              ),
+            ),
             title: Text('W.O.D - Fit'),
             automaticallyImplyLeading: false,
           ),

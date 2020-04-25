@@ -13,7 +13,7 @@ class Auth with ChangeNotifier {
   FirebaseUser currentUser;
   String name;
   String email;
-  String imageUrl;
+  String _imageUrl;
 
   String _token;
   String _userId;
@@ -28,6 +28,10 @@ class Auth with ChangeNotifier {
 
   String get userId {
     return _userId;
+  }
+
+  String get imageUrl {
+    return _imageUrl;
   }
 
   Future<String> signInWithGoogle() async {
@@ -87,7 +91,7 @@ class Auth with ChangeNotifier {
 
     name = user.displayName;
     email = user.email;
-    imageUrl = user.photoUrl;
+    _imageUrl = user.photoUrl;
 
     // Only taking the first part of the name, i.e., First Name
     if (name.contains(" ")) {

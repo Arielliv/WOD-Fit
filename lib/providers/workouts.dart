@@ -25,7 +25,7 @@ class Workouts with ChangeNotifier {
 
   Future<void> fetchAndSetWorkouts([bool filterByUser = false]) async {
     final filterUrl = filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
-    var url = '$baseUrl/items.json?auth=$authToken&$filterUrl';
+    var url = '$baseUrl/workouts.json?auth=$authToken&$filterUrl';
     
     try {
       final response = await http.get(url);
@@ -35,11 +35,11 @@ class Workouts with ChangeNotifier {
         return;
       } else {
         final List<Workout> loadedWorkouts = [];
-        extractedData.forEach((productId, productData) {
+        extractedData.forEach((workoutId, workoutData) {
           loadedWorkouts.add(Workout(
-            id: productId,
-            title: productData['title'],
-            creatorId: productData['creatorId'],
+            id: workoutId,
+            title: workoutData['title'],
+            creatorId: workoutData['creatorId'],
           ));
         });
         _workouts = loadedWorkouts;
@@ -51,7 +51,7 @@ class Workouts with ChangeNotifier {
   }
 
   Future<void> addWorkout(Workout workout) async {
-    final url = '$baseUrl/items.json?auth=$authToken';
+    final url = '$baseUrl/workouts.json?auth=$authToken';
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -72,7 +72,7 @@ class Workouts with ChangeNotifier {
   }
 
   Future<void> deleteWorkout(String id) async {
-    final url = '$baseUrl/items/$id.json?auth=$authToken';
+    final url = '$baseUrl/workouts/$id.json?auth=$authToken';
     final existingWorkoutIndex = _workouts.indexWhere((workout) => workout.id == id);
     var existingWorkout = _workouts[existingWorkoutIndex];
 

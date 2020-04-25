@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wod_fit/screens/add_workout_sceen.dart';
 import 'package:wod_fit/widgets/app_drawer.dart';
+import 'package:wod_fit/widgets/workouts_grid.dart';
 
 import '../providers/workouts.dart';
 
@@ -64,14 +66,14 @@ class _WorkoutsOverviewScreenState extends State<WorkoutsOverviewScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : Container(),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.of(context).pushNamed(AddWorkoutScreen.routeName);
-      //   },
-      //   tooltip: 'Create new workout',
-      //   child: const Icon(Icons.add),
-      // ),
+          : WorkoutsGrid(_showOnlyFavorites),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(AddWorkoutScreen.routeName);
+        },
+        tooltip: 'Create new workout',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wod_fit/providers/auth.dart';
 import 'package:wod_fit/providers/workouts.dart';
+import 'package:wod_fit/screens/add_workout_sceen.dart';
 import 'package:wod_fit/screens/splash_screen.dart';
 import 'package:wod_fit/screens/workouts_overview_screen.dart';
 
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
-          title: 'WOD Fit',
+          title: 'W.O.D - Fit',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
@@ -42,7 +43,9 @@ class MyApp extends StatelessWidget {
                           ? SplashScreen()
                           : LoginScreen(),
                 ),
-          routes: {},
+          routes: {
+            AddWorkoutScreen.routeName: (ctx) => AddWorkoutScreen(),
+          },
         ),
       ),
     );
