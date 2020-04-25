@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "900319905276",
+    "firebase_url": "https://wod-fit-46e9a.firebaseio.com",
+    "project_id": "wod-fit-46e9a",
+    "storage_bucket": "wod-fit-46e9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900319905276:android:3c1d7d5c1e7fb2284dde79",
+        "android_client_info": {
+          "package_name": "com.wodfit.wodfit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "900319905276-ejtjm4clvjvc3unjau9ee4bhujeb31me.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wodfit.wodfit",
+            "certificate_hash": "0e7e1a2b2f9d992e6a1dee26fd20de2fa0fcf416"
+          }
+        },
+        {
+          "client_id": "900319905276-6t41va49kap7263orngkkhj45ihkp7j1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnV7GocB7cBHeRfkY38NHnHjg6jOQgyI8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900319905276-6t41va49kap7263orngkkhj45ihkp7j1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
