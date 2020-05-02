@@ -103,7 +103,9 @@ class Auth with ChangeNotifier {
 
     currentUser = await _auth.currentUser();
 
-    currentUser.getIdToken().then((IdTokenResult) => {_token = IdTokenResult.token});
+    currentUser
+        .getIdToken()
+        .then((IdTokenResult idTokenResult) => _token = idTokenResult.token);
     _userId = currentUser.uid;
     assert(user.uid == currentUser.uid);
     notifyListeners();
@@ -124,5 +126,9 @@ class Auth with ChangeNotifier {
   Future<String> tryAutoLogin() async {
     final AuthCredential credential = await getUserCardentials();
     return login(credential);
+  }
+
+  String getUserImageUrl() {
+    return this.imageUrl;
   }
 }

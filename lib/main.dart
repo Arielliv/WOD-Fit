@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
             auth.token,
             auth.userId,
             prevWorkouts == null ? [] : prevWorkouts.workouts,
+            auth.currentUser,
           ),
         ),
       ],
