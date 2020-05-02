@@ -13,20 +13,16 @@ class WorkoutsGrid extends StatelessWidget {
     final workoutsData = Provider.of<Workouts>(context);
     final workouts =
         showOnlyFavorites ? null : workoutsData.workouts;
-    return GridView.builder(
+
+    return ListView.builder(
       padding: const EdgeInsets.all(10.0),
       itemCount: workouts.length,
+      scrollDirection: Axis.vertical,
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
         value: workouts[i],
         child: Container(
           child: WorkoutWidget(),
         ),
-      ),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3 / 2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
       ),
     );
   }

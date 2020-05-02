@@ -16,17 +16,17 @@ class WorkoutPart {
     @required this.course,
   });
 
-  /// A necessary factory constructor for creating a new User instance
-  /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
-  /// The constructor is named after the source class, in this case, User.
+  /// A necessary factory constructor for creating a new WorkoutPart instance
+  /// from a map. Pass the map to the generated `_$WorkoutPartFromJson()` constructor.
+  /// The constructor is named after the source class, in this case, WorkoutPart.
   factory WorkoutPart.fromJson(Map<String, dynamic> json) => _$WorkoutPartFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated
-  /// helper method `_$UserToJson`.
+  /// helper method `_$WorkoutPartToJson`.
   Map<String, dynamic> toJson() => _$WorkoutPartToJson(this);
 
-  
+
   // Map<String, dynamic> toJson() => {
   //       'type': EnumToString.parse(type),
   //       'course': course.toJson(),

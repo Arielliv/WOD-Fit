@@ -62,6 +62,7 @@ class Workouts with ChangeNotifier {
             'workoutParts': json.encode(workout.workoutParts
                 .map((workoutPart) => workoutPart.toJson())
                 .toList()),
+            'date': DateTime.now().millisecondsSinceEpoch,
           }));
 
       final newWorkout = Workout(
@@ -70,6 +71,7 @@ class Workouts with ChangeNotifier {
         id: json.decode(response.body)['name'],
         creatorImageUrl: currentUser.photoUrl,
         workoutParts: workout.workoutParts,
+        date: DateTime.now(),
       );
 
       _workouts.add(newWorkout);

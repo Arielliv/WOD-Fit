@@ -18,14 +18,14 @@ class Course {
     this.time,
   });
 
-  /// A necessary factory constructor for creating a new User instance
-  /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
-  /// The constructor is named after the source class, in this case, User.
+  /// A necessary factory constructor for creating a new Course instance
+  /// from a map. Pass the map to the generated `_$CourseFromJson()` constructor.
+  /// The constructor is named after the source class, in this case, Course.
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated
-  /// helper method `_$UserToJson`.
+  /// helper method `_$CourseToJson`.
   Map<String, dynamic> toJson() => _$CourseToJson(this);
 
   // Map<String, dynamic> toJson() => {
