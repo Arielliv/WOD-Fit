@@ -234,14 +234,14 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
     );
   }
 
-  String numberFieldValidator(value, fieldName) {
+  String textFieldValidator(value, fieldName) {
     if (value.isEmpty) {
       return 'Please enter a $fieldName';
     }
     return null;
   }
 
-  String textFieldValidator(value, fieldName) {
+  String numberFieldValidator(value, fieldName) {
     if (value.isEmpty) {
       return 'Please enter a $fieldName';
     }
@@ -254,7 +254,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
     return null;
   }
 
-  String dropdownValidator(value, fieldName){
+  String dropdownValidator(value, fieldName) {
     if (value == null) {
       return 'Please choose a $fieldName';
     }
@@ -362,74 +362,52 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                   Flexible(
                     flex: 7,
                     child: Container(
-                      margin: EdgeInsets.only(left: 5.0),
-                      padding: EdgeInsets.only(top: 16.0),
-                      child: exercise.type == exerciseType.Time
-                          ? TextFormField(
-                              initialValue: '',
-                              decoration:
-                                  InputDecoration(labelText: 'Exercise Time'),
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.number,
-                              onChanged: (value) => updateExerciseTime(
-                                  workoutPartindex, exerciseIndex, value),
-                              onSaved: (value) {
-                                updateExerciseTime(
+                        margin: EdgeInsets.only(left: 5.0),
+                        padding: EdgeInsets.only(top: 16.0),
+                        child: TextFormField(
+                          initialValue: '',
+                          decoration: InputDecoration(
+                              labelText: exercise.type == exerciseType.Time
+                                  ? 'Exercise Time'
+                                  : 'Exercise Sets number'),
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) =>
+                              exercise.type == exerciseType.Time
+                                  ? updateExerciseTime(
+                                      workoutPartindex, exerciseIndex, value)
+                                  : updateExerciseIteration(
+                                      workoutPartindex, exerciseIndex, value),
+                          onSaved: (value) {
+                            exercise.type == exerciseType.Time
+                                ? updateExerciseTime(
+                                    workoutPartindex, exerciseIndex, value)
+                                : updateExerciseIteration(
                                     workoutPartindex, exerciseIndex, value);
-                                onSaveWorkout();
-                              },
-                              validator: (value) =>
-                                  numberFieldValidator(value, 'how long will it take'),
-                              focusNode: _focusExecerciseTimeOrSetNodes[
-                                  workoutPartindex][exerciseIndex],
-                              onFieldSubmitted: (_) {
-                                if (exerciseIndex <
-                                    workoutPart.course.exercises.length - 1) {
-                                  FocusScope.of(context).requestFocus(
-                                      _focusExecerciseNameNodes[
-                                          workoutPartindex][exerciseIndex + 1]);
-                                }
-                                if (workoutPartindex <
-                                    workoutParts.length - 1) {
-                                  FocusScope.of(context).requestFocus(
-                                      _focusCourseTimeOrSetNodes[
-                                          workoutPartindex + 1]);
-                                }
-                              },
-                            )
-                          : TextFormField(
-                              initialValue: '',
-                              decoration:
-                                  InputDecoration(labelText: 'Exercise Sets number'),
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.number,
-                              onChanged: (value) => updateExerciseIteration(
-                                  workoutPartindex, exerciseIndex, value),
-                              onSaved: (value) {
-                                updateExerciseIteration(
-                                    workoutPartindex, exerciseIndex, value);
-                                onSaveWorkout();
-                              },
-                              validator: (value) =>
-                                  numberFieldValidator(value, 'number of sets'),
-                              focusNode: _focusExecerciseTimeOrSetNodes[
-                                  workoutPartindex][exerciseIndex],
-                              onFieldSubmitted: (_) {
-                                if (exerciseIndex <
-                                    workoutPart.course.exercises.length - 1) {
-                                  FocusScope.of(context).requestFocus(
-                                      _focusExecerciseNameNodes[
-                                          workoutPartindex][exerciseIndex + 1]);
-                                }
-                                if (workoutPartindex <
-                                    workoutParts.length - 1) {
-                                  FocusScope.of(context).requestFocus(
-                                      _focusCourseTimeOrSetNodes[
-                                          workoutPartindex + 1]);
-                                }
-                              },
-                            ),
-                    ),
+                            onSaveWorkout();
+                          },
+                          validator: (value) => numberFieldValidator(
+                              value,
+                              exercise.type == exerciseType.Time
+                                  ? 'how long will it take'
+                                  : 'number of sets'),
+                          focusNode:
+                              _focusExecerciseTimeOrSetNodes[workoutPartindex]
+                                  [exerciseIndex],
+                          onFieldSubmitted: (_) {
+                            if (exerciseIndex <
+                                workoutPart.course.exercises.length - 1) {
+                              FocusScope.of(context).requestFocus(
+                                  _focusExecerciseNameNodes[workoutPartindex]
+                                      [exerciseIndex + 1]);
+                            }
+                            if (workoutPartindex < workoutParts.length - 1) {
+                              FocusScope.of(context).requestFocus(
+                                  _focusCourseTimeOrSetNodes[
+                                      workoutPartindex + 1]);
+                            }
+                          },
+                        )),
                   ),
                 ],
               ),
@@ -503,60 +481,48 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                 Flexible(
                   flex: 7,
                   child: Container(
-                    margin: EdgeInsets.only(left: 5.0),
-                    padding: EdgeInsets.only(top: 16.0),
-                    child: (workoutPart.course.type == courseType.Amrap ||
-                            workoutPart.course.type == courseType.Emom)
-                        ? TextFormField(
-                            initialValue: '',
-                            decoration:
-                                InputDecoration(labelText: '${EnumToString.parse(workoutPart.course.type)} Time'),
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) =>
-                                updateCourseTime(workoutPartindex, value),
-                            onSaved: (value) {
-                              updateCourseTime(workoutPartindex, value);
-                              onSaveWorkout();
-                            },
-                            validator: (value) =>
-                                numberFieldValidator(value, 'how long will it take'),
-                            focusNode:
-                                _focusCourseTimeOrSetNodes[workoutPartindex],
-                            onFieldSubmitted: (_) => FocusScope.of(context)
-                                .requestFocus(
-                                    _focusExecerciseNameNodes[workoutPartindex]
-                                        [0]),
-                          )
-                        : TextFormField(
-                            initialValue: '',
-                            decoration:
-                                InputDecoration(labelText: 'Course Sets'),
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) =>
-                                updateCourseSets(workoutPartindex, value),
-                            onSaved: (value) {
-                              updateCourseSets(workoutPartindex, value);
-                              onSaveWorkout();
-                            },
-                            validator: (value) =>
-                                numberFieldValidator(value, 'number of sets'),
-                            focusNode:
-                                _focusCourseTimeOrSetNodes[workoutPartindex],
-                            onFieldSubmitted: (_) => FocusScope.of(context)
-                                .requestFocus(
-                                    _focusExecerciseNameNodes[workoutPartindex]
-                                        [0]),
-                          ),
-                  ),
+                      margin: EdgeInsets.only(left: 5.0),
+                      padding: EdgeInsets.only(top: 16.0),
+                      child: TextFormField(
+                        initialValue: '',
+                        decoration: InputDecoration(
+                            labelText: (workoutPart.course.type ==
+                                        courseType.Amrap ||
+                                    workoutPart.course.type == courseType.Emom)
+                                ? '${EnumToString.parse(workoutPart.course.type)} Time'
+                                : 'Course Sets'),
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) =>
+                            (workoutPart.course.type == courseType.Amrap ||
+                                    workoutPart.course.type == courseType.Emom)
+                                ? updateCourseTime(workoutPartindex, value)
+                                : updateCourseSets(workoutPartindex, value),
+                        onSaved: (value) {
+                          (workoutPart.course.type == courseType.Amrap ||
+                                  workoutPart.course.type == courseType.Emom)
+                              ? updateCourseTime(workoutPartindex, value)
+                              : updateCourseSets(workoutPartindex, value);
+                          onSaveWorkout();
+                        },
+                        validator: (value) => numberFieldValidator(
+                            value,
+                            (workoutPart.course.type == courseType.Amrap ||
+                                    workoutPart.course.type == courseType.Emom)
+                                ? 'how long will it take'
+                                : 'number of sets'),
+                        focusNode: _focusCourseTimeOrSetNodes[workoutPartindex],
+                        onFieldSubmitted: (_) => FocusScope.of(context)
+                            .requestFocus(
+                                _focusExecerciseNameNodes[workoutPartindex][0]),
+                      )),
                 ),
               ],
             ),
           ),
           ...getListCourseFeilds(workoutPart, workoutParts, workoutPartindex),
           Padding(
-            padding: const EdgeInsets.only(top:10.0, bottom: 10.0),
+            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
             child: Container(
               width: double.infinity,
               child: RaisedButton(
@@ -618,7 +584,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                     ),
                     ...getListFeilds(_newWorkout.workoutParts),
                     Padding(
-                      padding: const EdgeInsets.only(top:5.0),
+                      padding: const EdgeInsets.only(top: 5.0),
                       child: Container(
                         width: double.infinity,
                         child: RaisedButton(

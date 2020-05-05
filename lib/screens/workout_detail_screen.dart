@@ -23,18 +23,17 @@ class WorkoutDetailScreen extends StatelessWidget {
   List<Widget> getExercises(List<Exercise> exercsies) {
     return Utils.mapIndexed(
       exercsies,
-      (index, Exercise exercsie) => Expanded(
-        child: Container(
-          padding: EdgeInsets.all(20),
-          color: Colors.yellow,
-          width: double.infinity,
-          child: Text(
-            exercsie.type == exerciseType.Iteration
-                ? '${exercsie.name} X ${exercsie.iteration}'
-                : '${exercsie.name} in ${exercsie.time} seconds',
-            softWrap: true,
-            textAlign: TextAlign.center,
-          ),
+      (index, Exercise exercsie) => Container(
+        padding: EdgeInsets.all(10),
+        color: Colors.yellow,
+        width: double.infinity,
+        height: 45,
+        child: Text(
+          exercsie.type == exerciseType.Iteration
+              ? '${exercsie.name} X ${exercsie.iteration}'
+              : '${exercsie.name} in ${exercsie.time} seconds',
+          softWrap: true,
+          textAlign: TextAlign.center,
         ),
       ),
     ).toList();
@@ -44,7 +43,8 @@ class WorkoutDetailScreen extends StatelessWidget {
     return Utils.mapIndexed(
       workoutParts,
       (index, WorkoutPart workoutPart) => Container(
-        height: 500,
+        height: workoutParts.length == 1 ? 1000 : 500,
+        color: Colors.blue,
         width: double.infinity,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -59,9 +59,9 @@ class WorkoutDetailScreen extends StatelessWidget {
                   child: Text(
                     getCourseText(workoutPart),
                     style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                      ),
+                      color: Colors.black87,
+                      fontSize: 16,
+                    ),
                     softWrap: true,
                     textAlign: TextAlign.center,
                   ),
@@ -118,9 +118,6 @@ class WorkoutDetailScreen extends StatelessWidget {
                       textAlign: TextAlign.left),
                 ),
                 ...getWorkoutparts(loadedWorkout.workoutParts),
-                SizedBox(
-                  height: 600,
-                ),
               ],
             ),
           ),
