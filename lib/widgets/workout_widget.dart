@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:wod_fit/screens/workout_detail_screen.dart';
 import '../providers/workout.dart';
 import '../providers/auth.dart';
 
@@ -15,21 +16,30 @@ class WorkoutWidget extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.blue.withAlpha(30),
         onTap: () {
-          print('Card tapped.');
+          Navigator.of(context).pushNamed(
+            WorkoutDetailScreen.routeName,
+            arguments: workout.id,
+          );
         },
-        child: Hero(
-          tag: workout.id,
-          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    userImageUrl,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Hero(
+              tag: workout.id,
+              child: Material(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      userImageUrl,
+                    ),
+                    backgroundColor: Colors.transparent,
                   ),
-                  backgroundColor: Colors.transparent,
+                  title: Text(workout.title),
+                  trailing: Text(DateFormat.yMMMd().format(workout.date)),
                 ),
-                title: Text(workout.title),
-                trailing: Text(DateFormat.yMMMd().format(workout.date))),
-          ]),
+              ),
+            ),
+          ],
         ),
       ),
     );

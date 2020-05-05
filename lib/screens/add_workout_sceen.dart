@@ -311,7 +311,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
             Container(
               child: TextFormField(
                 initialValue: '',
-                decoration: InputDecoration(labelText: 'Execercise name'),
+                decoration: InputDecoration(labelText: 'Exercise name'),
                 textInputAction: TextInputAction.next,
                 onChanged: (value) =>
                     updateExerciseName(workoutPartindex, exerciseIndex, value),
@@ -320,7 +320,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                   onSaveWorkout();
                 },
                 validator: (value) =>
-                    textFieldValidator(value, 'execercise name'),
+                    textFieldValidator(value, 'exercise name'),
                 focusNode: _focusExecerciseNameNodes[workoutPartindex]
                     [exerciseIndex],
                 onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(
@@ -333,9 +333,9 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
               child: Row(
                 children: <Widget>[
                   Flexible(
-                    flex: 1,
+                    flex: 8,
                     child: Container(
-                      padding: EdgeInsets.only(right: 5.0),
+                      margin: EdgeInsets.only(right: 5.0),
                       child: DropDownFormField(
                         titleText: 'Exercise type',
                         hintText: 'Please choose one',
@@ -360,7 +360,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                     ),
                   ),
                   Flexible(
-                    flex: 1,
+                    flex: 7,
                     child: Container(
                       margin: EdgeInsets.only(left: 5.0),
                       padding: EdgeInsets.only(top: 16.0),
@@ -477,7 +477,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
             child: Row(
               children: <Widget>[
                 Flexible(
-                  flex: 1,
+                  flex: 8,
                   child: Container(
                     margin: EdgeInsets.only(right: 5.0),
                     child: DropDownFormField(
@@ -501,7 +501,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                   ),
                 ),
                 Flexible(
-                  flex: 1,
+                  flex: 7,
                   child: Container(
                     margin: EdgeInsets.only(left: 5.0),
                     padding: EdgeInsets.only(top: 16.0),
@@ -555,18 +555,22 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
             ),
           ),
           ...getListCourseFeilds(workoutPart, workoutParts, workoutPartindex),
-          Container(
-            width: double.infinity,
-            child: RaisedButton(
-              color: Theme.of(context).accentColor,
-              onPressed: () {
-                addExercise(workoutPartindex);
-              },
-              child: const Text(
-                'Add exercise',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.only(top:10.0, bottom: 10.0),
+            child: Container(
+              width: double.infinity,
+              child: RaisedButton(
+                color: Theme.of(context).accentColor,
+                onPressed: () {
+                  addExercise(workoutPartindex);
+                },
+                padding: EdgeInsets.all(10.0),
+                child: const Text(
+                  'Add exercise',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -613,18 +617,22 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                           .requestFocus(_focusCourseTimeOrSetNodes[0]),
                     ),
                     ...getListFeilds(_newWorkout.workoutParts),
-                    Container(
-                      width: double.infinity,
-                      child: RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        onPressed: () {
-                          addWorkoutPart();
-                        },
-                        child: const Text(
-                          'Add workout part',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                    Padding(
+                      padding: const EdgeInsets.only(top:5.0),
+                      child: Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          onPressed: () {
+                            addWorkoutPart();
+                          },
+                          padding: EdgeInsets.all(10.0),
+                          child: const Text(
+                            'Add workout part',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
