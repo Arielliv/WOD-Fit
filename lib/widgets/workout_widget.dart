@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:wod_fit/screens/workout_detail_screen.dart';
-import 'package:wod_fit/screens/workout_details_screen.dart';
 import '../providers/workout.dart';
 import '../providers/auth.dart';
 
