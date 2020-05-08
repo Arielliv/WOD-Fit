@@ -6,7 +6,6 @@ class SingInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlineButton(
-      splashColor: Colors.grey,
       onPressed: () async {
         await Provider.of<Auth>(context, listen: false).signInWithGoogle();
       },

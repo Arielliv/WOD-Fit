@@ -84,6 +84,20 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
     }
   }
 
+  void removeExercise(
+    int index,
+  ) {
+    if (_newWorkout.workoutParts[index] != null &&
+        _newWorkout.workoutParts[index].course != null &&
+        _newWorkout.workoutParts[index].course.exercises.length > 0) {
+      _focusExecerciseNameNodes[index].removeLast();
+      _focusExecerciseTimeOrSetNodes[index].removeLast();
+      setState(() {
+        _newWorkout.workoutParts[index].course.exercises.removeLast();
+      });
+    }
+  }
+
   void addWorkoutPart() {
     setState(() {
       _focusCourseTimeOrSetNodes.add(FocusNode());
@@ -100,6 +114,15 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
           ],
         ),
       ));
+    });
+  }
+
+  void removeWorkoutPart() {
+    setState(() {
+      _focusCourseTimeOrSetNodes.add(FocusNode());
+      _focusExecerciseNameNodes.removeLast();
+      _focusExecerciseTimeOrSetNodes.removeLast();
+      _newWorkout.workoutParts.removeLast();
     });
   }
 
@@ -521,25 +544,49 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
             ),
           ),
           ...getListCourseFeilds(workoutPart, workoutParts, workoutPartindex),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-            child: Container(
-              width: double.infinity,
-              child: RaisedButton(
-                color: Theme.of(context).accentColor,
-                onPressed: () {
-                  addExercise(workoutPartindex);
-                },
-                padding: EdgeInsets.all(10.0),
-                child: const Text(
-                  'Add exercise',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: Container(
+                  width: 180,
+                  child: RaisedButton(
+                    color: Theme.of(context).errorColor,
+                    onPressed: () {
+                      removeExercise(workoutPartindex);
+                    },
+                    padding: EdgeInsets.all(10.0),
+                    child: const Text(
+                      'Remove exercise',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: Container(
+                  width: 160,
+                  child: RaisedButton(
+                    onPressed: () {
+                      addExercise(workoutPartindex);
+                    },
+                    padding: EdgeInsets.all(10.0),
+                    child: const Text(
+                      'Add exercise',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           )
         ],
       ),
@@ -583,25 +630,51 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                           .requestFocus(_focusCourseTimeOrSetNodes[0]),
                     ),
                     ...getListFeilds(_newWorkout.workoutParts),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Container(
-                        width: double.infinity,
-                        child: RaisedButton(
-                          color: Theme.of(context).accentColor,
-                          onPressed: () {
-                            addWorkoutPart();
-                          },
-                          padding: EdgeInsets.all(10.0),
-                          child: const Text(
-                            'Add workout part',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Container(
+                            width: double.infinity,
+                            child: RaisedButton(
+                              color: Theme.of(context).accentColor,
+                              onPressed: () {
+                                addWorkoutPart();
+                              },
+                              padding: EdgeInsets.all(10.0),
+                              child: const Text(
+                                'Add workout part',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Container(
+                            width: double.infinity,
+                            child: RaisedButton(
+                              color:
+                                  Theme.of(context).errorColor.withOpacity(0.9),
+                              onPressed: () {
+                                removeWorkoutPart();
+                              },
+                              padding: EdgeInsets.all(10.0),
+                              child: const Text(
+                                'Remove workout part',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     )
                   ],
                 ),

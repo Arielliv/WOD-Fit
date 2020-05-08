@@ -5,6 +5,7 @@ import 'package:wod_fit/providers/workouts.dart';
 import 'package:wod_fit/screens/add_workout_sceen.dart';
 import 'package:wod_fit/screens/splash_screen.dart';
 import 'package:wod_fit/screens/workout_detail_screen.dart';
+import 'package:wod_fit/screens/workout_details_screen.dart';
 import 'package:wod_fit/screens/workouts_overview_screen.dart';
 
 import './screens/login_screen.dart';
@@ -35,6 +36,8 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
             accentColor: Colors.blueAccent,
+            splashColor: Colors.blue.withAlpha(30),
+            buttonColor: Colors.lightBlue            
           ),
           home: auth.isAuth
               ? WorkoutsOverviewScreen()
@@ -49,6 +52,7 @@ class MyApp extends StatelessWidget {
           routes: {
             AddWorkoutScreen.routeName: (ctx) => AddWorkoutScreen(),
             WorkoutDetailScreen.routeName: (ctx) => WorkoutDetailScreen(),
+            WorkoutDetailsScreen.routeName: (ctx) => WorkoutDetailsScreen(),
           },
         ),
       ),
