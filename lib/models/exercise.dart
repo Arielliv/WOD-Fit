@@ -1,21 +1,13 @@
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:wod_fit/models/enums.dart';
 part 'exercise.g.dart';
 
 @JsonSerializable()
 class Exercise {
-  exerciseType type;
-  int time;
-  int iteration;
-  String name;
+  String description;
 
   Exercise({
-    @required this.type,
-    @required this.name,
-    this.time,
-    this.iteration,
+    @required this.description,
   });
 
   /// A necessary factory constructor for creating a new Exercise instance

@@ -9,11 +9,11 @@ part 'workout_part.g.dart';
 @JsonSerializable()
 class WorkoutPart {
   workoutPartType type;
-  Course course;
+  List<Course> courses;
 
   WorkoutPart({
     @required this.type,
-    @required this.course,
+    @required this.courses,
   });
 
   /// A necessary factory constructor for creating a new WorkoutPart instance

@@ -9,16 +9,17 @@ part of 'workout_part.dart';
 WorkoutPart _$WorkoutPartFromJson(Map<String, dynamic> json) {
   return WorkoutPart(
     type: _$enumDecodeNullable(_$workoutPartTypeEnumMap, json['type']),
-    course: json['course'] == null
-        ? null
-        : Course.fromJson(json['course'] as Map<String, dynamic>),
+    courses: (json['courses'] as List)
+        ?.map((e) =>
+            e == null ? null : Course.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
   );
 }
 
 Map<String, dynamic> _$WorkoutPartToJson(WorkoutPart instance) =>
     <String, dynamic>{
       'type': _$workoutPartTypeEnumMap[instance.type],
-      'course': instance.course?.toJson(),
+      'courses': instance.courses?.map((e) => e?.toJson())?.toList(),
     };
 
 T _$enumDecode<T>(

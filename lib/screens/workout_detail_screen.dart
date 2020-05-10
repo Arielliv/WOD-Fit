@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wod_fit/models/course.dart';
 import 'package:wod_fit/models/enums.dart';
 import 'package:wod_fit/models/exercise.dart';
 import 'package:wod_fit/models/workout_part.dart';
@@ -80,12 +79,11 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
     super.didChangeDependencies();
   }
 
-  String getCourseText(workoutPart) {
-    if (workoutPart.course.type == courseType.Amrap ||
-        workoutPart.course.type == courseType.Emom) {
-      return '${EnumToString.parse(workoutPart.type)} - ${EnumToString.parse(workoutPart.course.type)} for ${workoutPart.course.time} minutes';
+  String getCourseText(Course course) {
+    if (course.type == courseType.Amrap || course.type == courseType.Emom) {
+      return '${EnumToString.parse(course.type)} for ${course.time} minutes';
     } else {
-      return '${EnumToString.parse(workoutPart.type)} part - ${workoutPart.course.sets.toString()} sets';
+      return '${course.sets.toString()} sets';
     }
   }
 
@@ -113,19 +111,64 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                 ),
               ),
             ),
-            Text(
-              exercsie.type == exerciseType.Iteration
-                  ? '${exercsie.name} - ${exercsie.iteration}'
-                  : '${exercsie.name} for ${exercsie.time} seconds',
-              softWrap: true,
-              textAlign: TextAlign.start,
-            ),
+            new Container(
+              alignment: Alignment.centerLeft,
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: new Column(
+                children: <Widget>[
+                  Text(
+                    '${exercsie.description}',
+                    softWrap: true,
+                    textAlign: TextAlign.start,
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
     ).toList();
   }
 
+  List<Widget> getCourses(List<Course> courses) {
+    return Utils.mapIndexed(
+      courses,
+      (index, Course course) => Container(
+        padding: EdgeInsets.all(10),
+        width: double.infinity,
+        child: Column(
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.topCenter,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      '- ',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                Text(
+                  getCourseText(course),
+                  softWrap: true,
+                  textAlign: TextAlign.start,
+                ),
+              ],
+            ),
+            ...getExercises(course.exercises),
+          ],
+        ),
+      ),
+    ).toList();
+  }
 
   Widget _buildPanel() {
     return Padding(
@@ -140,14 +183,15 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
           return ExpansionPanel(
             headerBuilder: (BuildContext context, bool isExpanded) {
               return ListTile(
-                title: Text(getCourseText(item.workoutPart)),
+                title: Text(
+                  EnumToString.parse(item.workoutPart.type),
+                ),
               );
             },
             canTapOnHeader: true,
             body: ListTile(
-              title: Column(children: <Widget>[
-                ...getExercises(item.workoutPart.course.exercises)
-              ]),
+              title: Column(
+                  children: <Widget>[...getCourses(item.workoutPart.courses)]),
             ),
             isExpanded: item.isExpanded,
           );

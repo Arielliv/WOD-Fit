@@ -19,9 +19,13 @@ class AddWorkoutScreen extends StatefulWidget {
 class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
   final _form = GlobalKey<FormState>();
 
-  List<FocusNode> _focusCourseTimeOrSetNodes = [];
-  List<List<FocusNode>> _focusExecerciseNameNodes = [[]];
-  List<List<FocusNode>> _focusExecerciseTimeOrSetNodes = [[]];
+  List<List<FocusNode>> _focusCourseTimeOrSetNodes = [[]];
+  List<List<List<FocusNode>>> _focusExecerciseNameNodes = [
+    [[]]
+  ];
+  List<List<List<FocusNode>>> _focusExecerciseTimeOrSetNodes = [
+    [[]]
+  ];
 
   var _newWorkout = Workout(
     date: null,
@@ -32,16 +36,17 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
     workoutParts: [
       WorkoutPart(
         type: workoutPartType.WarmUp,
-        course: Course(
-          type: courseType.Regular,
-          exercises: [
-            Exercise(
-              name: '',
-              type: exerciseType.Iteration,
-            )
-          ],
-        ),
-      )
+        courses: [
+          Course(
+            type: courseType.Regular,
+            exercises: [
+              Exercise(
+                description: '',
+              )
+            ],
+          ),
+        ],
+      ),
     ],
   );
 
@@ -52,74 +57,127 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
     super.initState();
 
     _focusCourseTimeOrSetNodes =
-        List<FocusNode>.generate(1, (int index) => FocusNode());
-    _focusExecerciseNameNodes = new List.generate(
-        1, (int index) => List.generate(1, (int index) => FocusNode()));
-    _focusExecerciseTimeOrSetNodes = new List.generate(
-        1, (int index) => List.generate(1, (int index) => FocusNode()));
+        new List.generate(1, (_) => List.generate(1, (_) => FocusNode()));
+    _focusExecerciseNameNodes = new List.generate(1,
+        (_) => List.generate(1, (_) => List.generate(1, (_) => FocusNode())));
+    _focusExecerciseTimeOrSetNodes = new List.generate(1,
+        (_) => List.generate(1, (_) => List.generate(1, (_) => FocusNode())));
   }
 
   @override
   void dispose() {
     super.dispose();
-    _focusCourseTimeOrSetNodes.forEach((node) => node..dispose());
-    _focusExecerciseNameNodes.forEach(
-        (listOfNodes) => listOfNodes.forEach(((node) => node..dispose())));
-    _focusExecerciseTimeOrSetNodes.forEach(
-        (listOfNodes) => listOfNodes.forEach(((node) => node..dispose())));
+    _focusCourseTimeOrSetNodes.forEach(
+        (listOfNodes) => listOfNodes.forEach(((node) => node.dispose())));
+    _focusExecerciseNameNodes.forEach((listOfNodes1) => listOfNodes1.forEach(
+        (listOfNodes2) => listOfNodes2.forEach(((node) => node.dispose()))));
+
+    _focusExecerciseTimeOrSetNodes.forEach((listOfNodes1) =>
+        listOfNodes1.forEach((listOfNodes2) =>
+            listOfNodes2.forEach(((node) => node.dispose()))));
   }
 
   void addExercise(
-    int index,
+    int workoutIndex,
+    int courseIndex,
   ) {
-    if (_newWorkout.workoutParts[index] != null &&
-        _newWorkout.workoutParts[index].course != null) {
-      _focusExecerciseNameNodes[index].add(FocusNode());
-      _focusExecerciseTimeOrSetNodes[index].add(FocusNode());
+    if (_newWorkout.workoutParts[workoutIndex] != null &&
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex] != null) {
+      _focusExecerciseNameNodes[workoutIndex][courseIndex].add(FocusNode());
+      _focusExecerciseTimeOrSetNodes[workoutIndex][courseIndex]
+          .add(FocusNode());
       setState(() {
-        _newWorkout.workoutParts[index].course.exercises.add(Exercise(
-          name: '',
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex].exercises
+            .add(Exercise(
+          description: '',
         ));
       });
     }
   }
 
   void removeExercise(
-    int index,
+    int workoutIndex,
+    int courseIndex,
   ) {
-    if (_newWorkout.workoutParts[index] != null &&
-        _newWorkout.workoutParts[index].course != null &&
-        _newWorkout.workoutParts[index].course.exercises.length > 0) {
-      _focusExecerciseNameNodes[index].removeLast();
-      _focusExecerciseTimeOrSetNodes[index].removeLast();
+    if (_newWorkout.workoutParts[workoutIndex] != null &&
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex] != null &&
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex].exercises
+                .length >
+            0) {
+      _focusExecerciseNameNodes[workoutIndex][courseIndex].removeLast();
+      _focusExecerciseTimeOrSetNodes[workoutIndex][courseIndex].removeLast();
       setState(() {
-        _newWorkout.workoutParts[index].course.exercises.removeLast();
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex].exercises
+            .removeLast();
+      });
+    }
+  }
+
+  void addCourse(
+    int workoutIndex,
+  ) {
+    if (_newWorkout.workoutParts[workoutIndex] != null) {
+      setState(() {
+        _focusCourseTimeOrSetNodes[workoutIndex].add(FocusNode());
+        _focusExecerciseNameNodes[workoutIndex]
+            .add(List.generate(1, (_) => FocusNode()));
+        _focusExecerciseTimeOrSetNodes[workoutIndex]
+            .add(List.generate(1, (_) => FocusNode()));
+        _newWorkout.workoutParts[workoutIndex].courses.add(
+          Course(
+            type: courseType.Regular,
+            exercises: [
+              Exercise(
+                description: '',
+              )
+            ],
+          ),
+        );
+      });
+    }
+  }
+
+  void removeCourse(
+    int workoutIndex,
+  ) {
+    if (_newWorkout.workoutParts[workoutIndex] != null &&
+        _newWorkout.workoutParts[workoutIndex].courses.length > 0) {
+      _focusExecerciseNameNodes[workoutIndex].removeLast();
+      _focusExecerciseTimeOrSetNodes[workoutIndex].removeLast();
+      setState(() {
+        _focusCourseTimeOrSetNodes.removeLast();
+        _focusExecerciseNameNodes.removeLast();
+        _focusExecerciseTimeOrSetNodes.removeLast();
+        _newWorkout.workoutParts.removeLast();
       });
     }
   }
 
   void addWorkoutPart() {
     setState(() {
-      _focusCourseTimeOrSetNodes.add(FocusNode());
+      _focusCourseTimeOrSetNodes.add(List.generate(1, (_) => FocusNode()));
       _focusExecerciseNameNodes
-          .add(List.generate(1, (int index) => FocusNode()));
+          .add(List.generate(1, (_) => List.generate(1, (_) => FocusNode())));
       _focusExecerciseTimeOrSetNodes
-          .add(List.generate(1, (int index) => FocusNode()));
+          .add(List.generate(1, (_) => List.generate(1, (_) => FocusNode())));
       _newWorkout.workoutParts.add(WorkoutPart(
-        course: Course(
-          exercises: [
-            Exercise(
-              name: '',
-            )
-          ],
-        ),
+        courses: [
+          Course(
+             type: courseType.Regular,
+            exercises: [
+              Exercise(
+                description: '',
+              )
+            ],
+          ),
+        ],
       ));
     });
   }
 
   void removeWorkoutPart() {
     setState(() {
-      _focusCourseTimeOrSetNodes.add(FocusNode());
+      _focusCourseTimeOrSetNodes.removeLast();
       _focusExecerciseNameNodes.removeLast();
       _focusExecerciseTimeOrSetNodes.removeLast();
       _newWorkout.workoutParts.removeLast();
@@ -139,98 +197,61 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
   }
 
   void updateCourseTime(
-    int index,
+    int workoutIndex,
+    int courseIndex,
     String time,
   ) {
-    if (_newWorkout.workoutParts[index] != null &&
-        _newWorkout.workoutParts[index].course != null) {
+    if (_newWorkout.workoutParts[workoutIndex] != null &&
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex] != null) {
       setState(() {
-        _newWorkout.workoutParts[index].course.time = int.parse(time);
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex].time =
+            int.parse(time);
       });
     }
   }
 
   void updateCourseSets(
-    int index,
+    int workoutIndex,
+    int courseIndex,
     String sets,
   ) {
-    if (_newWorkout.workoutParts[index] != null &&
-        _newWorkout.workoutParts[index].course != null) {
+    if (_newWorkout.workoutParts[workoutIndex] != null &&
+        _newWorkout.workoutParts[workoutIndex].courses != null) {
       setState(() {
-        _newWorkout.workoutParts[index].course.sets = int.parse(sets);
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex].sets =
+            int.parse(sets);
       });
     }
   }
 
   void updateCourseType(
-    int index,
+    int workoutIndex,
+    int courseIndex,
     String type,
   ) {
-    if (_newWorkout.workoutParts[index] != null &&
-        _newWorkout.workoutParts[index].course != null) {
+    if (_newWorkout.workoutParts[workoutIndex] != null &&
+        _newWorkout.workoutParts[workoutIndex].courses != null) {
       setState(() {
-        _newWorkout.workoutParts[index].course.type =
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex].type =
             EnumToString.fromString(courseType.values, type);
       });
     }
   }
 
   void updateExerciseName(
-    int index,
-    int secondIndex,
-    String name,
+    int workoutIndex,
+    int courseIndex,
+    int exericiseIndex,
+    String description,
   ) {
-    if (_newWorkout.workoutParts[index] != null &&
-        _newWorkout.workoutParts[index].course != null &&
-        _newWorkout.workoutParts[index].course.exercises[secondIndex] != null) {
+    if (_newWorkout.workoutParts[workoutIndex] != null &&
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex] != null &&
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex]
+                .exercises[exericiseIndex] !=
+            null) {
       setState(() {
-        _newWorkout.workoutParts[index].course.exercises[secondIndex].name =
-            name;
-      });
-    }
-  }
-
-  void updateExercisesType(
-    int index,
-    int secondIndex,
-    String type,
-  ) {
-    if (_newWorkout.workoutParts[index] != null &&
-        _newWorkout.workoutParts[index].course != null &&
-        _newWorkout.workoutParts[index].course.exercises[secondIndex] != null) {
-      setState(() {
-        _newWorkout.workoutParts[index].course.exercises[secondIndex].type =
-            EnumToString.fromString(exerciseType.values, type);
-      });
-    }
-  }
-
-  void updateExerciseTime(
-    int index,
-    int secondIndex,
-    String time,
-  ) {
-    if (_newWorkout.workoutParts[index] != null &&
-        _newWorkout.workoutParts[index].course != null &&
-        _newWorkout.workoutParts[index].course.exercises[secondIndex] != null) {
-      setState(() {
-        _newWorkout.workoutParts[index].course.exercises[secondIndex].time =
-            int.parse(time);
-      });
-    }
-  }
-
-  void updateExerciseIteration(
-    int index,
-    int secondIndex,
-    String iteration,
-  ) {
-    if (_newWorkout.workoutParts[index] != null &&
-        _newWorkout.workoutParts[index].course != null &&
-        _newWorkout.workoutParts[index].course.exercises[secondIndex] != null) {
-      setState(() {
-        _newWorkout.workoutParts[index].course.exercises[secondIndex]
-            .iteration = int.parse(iteration);
+        _newWorkout.workoutParts[workoutIndex].courses[courseIndex]
+            .exercises[exericiseIndex].description = description;
       });
     }
   }
@@ -259,7 +280,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
 
   String textFieldValidator(value, fieldName) {
     if (value.isEmpty) {
-      return 'Please enter a $fieldName';
+      return 'Please enter a$fieldName';
     }
     return null;
   }
@@ -320,119 +341,54 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
     Navigator.of(context).pop();
   }
 
-  List<Widget> getListCourseFeilds(
-    WorkoutPart workoutPart,
+  List<Widget> getListExericies(
+    Course course,
     List<WorkoutPart> workoutParts,
     int workoutPartindex,
+    int courseindex,
   ) {
     return Utils.mapIndexed(
-      workoutPart.course.exercises,
+      course.exercises,
       (exerciseIndex, Exercise exercise) => SizedBox(
         width: double.infinity,
         child: Column(
           children: <Widget>[
             Container(
+              margin: const EdgeInsets.all(5.0),
+              // decoration: BoxDecoration(
+              //   color: Colors.white54,
+              //   borderRadius: BorderRadius.only(
+              //       topLeft: Radius.circular(3),
+              //       topRight: Radius.circular(3),
+              //       bottomLeft: Radius.circular(3),
+              //       bottomRight: Radius.circular(3)),
+              //   boxShadow: [
+              //     BoxShadow(
+              //       color: Colors.grey.withOpacity(0.2),
+              //       spreadRadius: 5,
+              //       blurRadius: 7,
+              //       offset: Offset(0, 3), // changes position of shadow
+              //     ),
+              //   ],
+              // ),
+              padding: const EdgeInsets.all(5.0),
               child: TextFormField(
                 initialValue: '',
-                decoration: InputDecoration(labelText: 'Exercise name'),
+                decoration: InputDecoration(labelText: 'Exercise'),
                 textInputAction: TextInputAction.next,
-                onChanged: (value) =>
-                    updateExerciseName(workoutPartindex, exerciseIndex, value),
+                onChanged: (value) => updateExerciseName(
+                    workoutPartindex, courseindex, exerciseIndex, value),
                 onSaved: (value) {
-                  updateExerciseName(workoutPartindex, exerciseIndex, value);
+                  updateExerciseName(
+                      workoutPartindex, courseindex, exerciseIndex, value);
                   onSaveWorkout();
                 },
-                validator: (value) =>
-                    textFieldValidator(value, 'exercise name'),
+                validator: (value) => textFieldValidator(value, 'n exercise'),
                 focusNode: _focusExecerciseNameNodes[workoutPartindex]
-                    [exerciseIndex],
+                    [courseindex][exerciseIndex],
                 onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(
                     _focusExecerciseTimeOrSetNodes[workoutPartindex]
-                        [exerciseIndex]),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0),
-              child: Row(
-                children: <Widget>[
-                  Flexible(
-                    flex: 8,
-                    child: Container(
-                      margin: EdgeInsets.only(right: 5.0),
-                      child: DropDownFormField(
-                        titleText: 'Exercise type',
-                        hintText: 'Please choose one',
-                        value: EnumToString.parse(exercise.type),
-                        onSaved: (value) {
-                          updateExercisesType(
-                              workoutPartindex, exerciseIndex, value);
-                          onSaveWorkout();
-                        },
-                        onChanged: (value) {
-                          updateExercisesType(
-                              workoutPartindex, exerciseIndex, value);
-                        },
-                        dataSource: EnumToString.toList(exerciseType.values)
-                            .map((type) => {"display": type, "value": type})
-                            .toList(),
-                        textField: 'display',
-                        valueField: 'value',
-                        validator: (value) =>
-                            dropdownValidator(value, 'exercise type'),
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 7,
-                    child: Container(
-                        margin: EdgeInsets.only(left: 5.0),
-                        padding: EdgeInsets.only(top: 16.0),
-                        child: TextFormField(
-                          initialValue: '',
-                          decoration: InputDecoration(
-                              labelText: exercise.type == exerciseType.Time
-                                  ? 'Exercise Time'
-                                  : 'Exercise Sets number'),
-                          textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) =>
-                              exercise.type == exerciseType.Time
-                                  ? updateExerciseTime(
-                                      workoutPartindex, exerciseIndex, value)
-                                  : updateExerciseIteration(
-                                      workoutPartindex, exerciseIndex, value),
-                          onSaved: (value) {
-                            exercise.type == exerciseType.Time
-                                ? updateExerciseTime(
-                                    workoutPartindex, exerciseIndex, value)
-                                : updateExerciseIteration(
-                                    workoutPartindex, exerciseIndex, value);
-                            onSaveWorkout();
-                          },
-                          validator: (value) => numberFieldValidator(
-                              value,
-                              exercise.type == exerciseType.Time
-                                  ? 'how long will it take'
-                                  : 'number of sets'),
-                          focusNode:
-                              _focusExecerciseTimeOrSetNodes[workoutPartindex]
-                                  [exerciseIndex],
-                          onFieldSubmitted: (_) {
-                            if (exerciseIndex <
-                                workoutPart.course.exercises.length - 1) {
-                              FocusScope.of(context).requestFocus(
-                                  _focusExecerciseNameNodes[workoutPartindex]
-                                      [exerciseIndex + 1]);
-                            }
-                            if (workoutPartindex < workoutParts.length - 1) {
-                              FocusScope.of(context).requestFocus(
-                                  _focusCourseTimeOrSetNodes[
-                                      workoutPartindex + 1]);
-                            }
-                          },
-                        )),
-                  ),
-                ],
+                        [courseindex][exerciseIndex]),
               ),
             ),
           ],
@@ -441,120 +397,99 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
     ).toList();
   }
 
-  List<Widget> getListFeilds(workoutParts) {
+  List<Widget> getListCourses(
+    WorkoutPart workoutPart,
+    List<WorkoutPart> workoutParts,
+    int workoutPartindex,
+  ) {
     return Utils.mapIndexed(
-      workoutParts,
-      (workoutPartindex, WorkoutPart workoutPart) => Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+      workoutPart.courses,
+      (courseIndex, Course course) => Column(
         children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 8,
-            width: double.infinity,
-            child: Container(
-              padding: EdgeInsets.only(top: 5.0),
-              margin: EdgeInsets.only(bottom: 3.0),
-              child: DropDownFormField(
-                titleText: 'Workout part type',
-                hintText: 'Please choose one',
-                value: EnumToString.parse(workoutPart.type),
-                onSaved: (value) {
-                  updateWorkoutType(workoutPartindex, value);
-                  onSaveWorkout();
-                },
-                onChanged: (value) =>
-                    updateWorkoutType(workoutPartindex, value),
-                dataSource: EnumToString.toList(workoutPartType.values)
-                    .map((type) => {"display": type, "value": type})
-                    .toList(),
-                textField: 'display',
-                valueField: 'value',
-                validator: (value) =>
-                    dropdownValidator(value, 'workout part type'),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                  flex: 8,
-                  child: Container(
-                    margin: EdgeInsets.only(right: 5.0),
-                    child: DropDownFormField(
-                      titleText: 'Course type',
-                      hintText: 'Please choose one',
-                      value: EnumToString.parse(workoutPart.course.type),
-                      validator: (value) =>
-                          dropdownValidator(value, 'course type'),
-                      onSaved: (value) {
-                        updateCourseType(workoutPartindex, value);
-                        onSaveWorkout();
-                      },
-                      onChanged: (value) =>
-                          updateCourseType(workoutPartindex, value),
-                      dataSource: EnumToString.toList(courseType.values)
-                          .map((type) => {"display": type, "value": type})
-                          .toList(),
-                      textField: 'display',
-                      valueField: 'value',
-                    ),
+          Row(
+            children: <Widget>[
+              Flexible(
+                flex: 8,
+                child: Container(
+                  margin: EdgeInsets.only(right: 5.0),
+                  child: DropDownFormField(
+                    titleText: 'Course type',
+                    hintText: 'Please choose one',
+                    value: EnumToString.parse(course.type),
+                    validator: (value) =>
+                        dropdownValidator(value, 'course type'),
+                    onSaved: (value) {
+                      updateCourseType(workoutPartindex, courseIndex, value);
+                      onSaveWorkout();
+                    },
+                    onChanged: (value) =>
+                        updateCourseType(workoutPartindex, courseIndex, value),
+                    dataSource: EnumToString.toList(courseType.values)
+                        .map((type) => {"display": type, "value": type})
+                        .toList(),
+                    textField: 'display',
+                    valueField: 'value',
                   ),
                 ),
-                Flexible(
-                  flex: 7,
-                  child: Container(
-                      margin: EdgeInsets.only(left: 5.0),
-                      padding: EdgeInsets.only(top: 16.0),
-                      child: TextFormField(
-                        initialValue: '',
-                        decoration: InputDecoration(
-                            labelText: (workoutPart.course.type ==
-                                        courseType.Amrap ||
-                                    workoutPart.course.type == courseType.Emom)
-                                ? '${EnumToString.parse(workoutPart.course.type)} Time'
-                                : 'Course Sets'),
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) =>
-                            (workoutPart.course.type == courseType.Amrap ||
-                                    workoutPart.course.type == courseType.Emom)
-                                ? updateCourseTime(workoutPartindex, value)
-                                : updateCourseSets(workoutPartindex, value),
-                        onSaved: (value) {
-                          (workoutPart.course.type == courseType.Amrap ||
-                                  workoutPart.course.type == courseType.Emom)
-                              ? updateCourseTime(workoutPartindex, value)
-                              : updateCourseSets(workoutPartindex, value);
-                          onSaveWorkout();
-                        },
-                        validator: (value) => numberFieldValidator(
-                            value,
-                            (workoutPart.course.type == courseType.Amrap ||
-                                    workoutPart.course.type == courseType.Emom)
-                                ? 'how long will it take'
-                                : 'number of sets'),
-                        focusNode: _focusCourseTimeOrSetNodes[workoutPartindex],
-                        onFieldSubmitted: (_) => FocusScope.of(context)
-                            .requestFocus(
-                                _focusExecerciseNameNodes[workoutPartindex][0]),
-                      )),
+              ),
+              Flexible(
+                flex: 7,
+                child: Container(
+                  margin: EdgeInsets.only(left: 5.0),
+                  padding: EdgeInsets.only(top: 16.0),
+                  child: TextFormField(
+                    initialValue: '',
+                    decoration: InputDecoration(
+                        labelText: (course.type == courseType.Amrap ||
+                                course.type == courseType.Emom)
+                            ? '${EnumToString.parse(course.type)} Time'
+                            : 'Course Sets'),
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) => (course.type == courseType.Amrap ||
+                            course.type == courseType.Emom)
+                        ? updateCourseTime(workoutPartindex, courseIndex, value)
+                        : updateCourseSets(
+                            workoutPartindex, courseIndex, value),
+                    onSaved: (value) {
+                      (course.type == courseType.Amrap ||
+                              course.type == courseType.Emom)
+                          ? updateCourseTime(
+                              workoutPartindex, courseIndex, value)
+                          : updateCourseSets(
+                              workoutPartindex, courseIndex, value);
+                      onSaveWorkout();
+                    },
+                    validator: (value) => numberFieldValidator(
+                        value,
+                        (course.type == courseType.Amrap ||
+                                course.type == courseType.Emom)
+                            ? 'how long will it take'
+                            : 'number of sets'),
+                    focusNode: _focusCourseTimeOrSetNodes[workoutPartindex]
+                        [courseIndex],
+                    onFieldSubmitted: (_) => FocusScope.of(context)
+                        .requestFocus(
+                            _focusExecerciseNameNodes[workoutPartindex]
+                                [courseIndex][0]),
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          ...getListCourseFeilds(workoutPart, workoutParts, workoutPartindex),
+          ...getListExericies(
+              course, workoutParts, workoutPartindex, courseIndex),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: Container(
-                  width: 180,
+                  width: 190,
                   child: RaisedButton(
                     color: Theme.of(context).errorColor,
                     onPressed: () {
-                      removeExercise(workoutPartindex);
+                      removeExercise(workoutPartindex, courseIndex);
                     },
                     padding: EdgeInsets.all(10.0),
                     child: const Text(
@@ -573,11 +508,88 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                   width: 160,
                   child: RaisedButton(
                     onPressed: () {
-                      addExercise(workoutPartindex);
+                      addExercise(workoutPartindex, courseIndex);
                     },
                     padding: EdgeInsets.all(10.0),
                     child: const Text(
                       'Add exercise',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    ).toList();
+  }
+
+  List<Widget> getListWorkoutParts(workoutParts) {
+    return Utils.mapIndexed(
+      workoutParts,
+      (workoutPartindex, WorkoutPart workoutPart) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(top: 5.0),
+            margin: EdgeInsets.only(bottom: 3.0),
+            child: DropDownFormField(
+              titleText: 'Workout part type',
+              hintText: 'Please choose one',
+              value: EnumToString.parse(workoutPart.type),
+              onSaved: (value) {
+                updateWorkoutType(workoutPartindex, value);
+                onSaveWorkout();
+              },
+              onChanged: (value) => updateWorkoutType(workoutPartindex, value),
+              dataSource: EnumToString.toList(workoutPartType.values)
+                  .map((type) => {"display": type, "value": type})
+                  .toList(),
+              textField: 'display',
+              valueField: 'value',
+              validator: (value) =>
+                  dropdownValidator(value, 'workout part type'),
+            ),
+          ),
+          ...getListCourses(workoutPart, workoutParts, workoutPartindex),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: Container(
+                  width: 190,
+                  child: RaisedButton(
+                    color: Theme.of(context).errorColor,
+                    onPressed: () {
+                      removeCourse(workoutPartindex);
+                    },
+                    padding: EdgeInsets.all(10.0),
+                    child: const Text(
+                      'Remove course',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: Container(
+                  width: 160,
+                  child: RaisedButton(
+                    onPressed: () {
+                      addCourse(workoutPartindex);
+                    },
+                    padding: EdgeInsets.all(10.0),
+                    child: const Text(
+                      'Add course',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.white,
@@ -625,11 +637,11 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                         onSaveWorkout();
                       },
                       validator: (value) =>
-                          textFieldValidator(value, 'workout title'),
+                          textFieldValidator(value, ' workout title'),
                       onFieldSubmitted: (_) => FocusScope.of(context)
-                          .requestFocus(_focusCourseTimeOrSetNodes[0]),
+                          .requestFocus(_focusCourseTimeOrSetNodes[0][0]),
                     ),
-                    ...getListFeilds(_newWorkout.workoutParts),
+                    ...getListWorkoutParts(_newWorkout.workoutParts),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
