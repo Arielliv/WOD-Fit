@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:wod_fit/screens/workout_detail_screen.dart';
+import 'package:wod_fit/widgets/workout_title_view.dart';
 import '../providers/workout.dart';
 import '../providers/auth.dart';
 
@@ -12,34 +13,14 @@ class WorkoutWidget extends StatelessWidget {
     final workout = Provider.of<Workout>(context, listen: false);
     final userImageUrl = Provider.of<Auth>(context, listen: false).imageUrl;
 
-    return Card(
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).pushNamed(
-            WorkoutDetailScreen.routeName,
-            arguments: workout.id,
-          );
-        },
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Hero(
-              tag: workout.id,
-              child: Material(
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      userImageUrl,
-                    ),
-                    backgroundColor: Colors.transparent,
-                  ),
-                  title: Text(workout.title),
-                  trailing: Text(DateFormat.yMMMd().format(workout.date)),
-                ),
-              ),
-            ),
-          ],
-        ),
+    return WorkoutTitleView(
+      name: workout.title,
+      date: DateFormat.yMMMd().format(workout.date),
+      workoutId: workout.id,
+      userImageUrl: userImageUrl,
+      press: () => Navigator.of(context).pushNamed(
+        WorkoutDetailScreen.routeName,
+        arguments: workout.id,
       ),
     );
   }
